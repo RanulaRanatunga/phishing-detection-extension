@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hosted Demo Links</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; background: #f4f4f4; }
+        .card { max-width: 760px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 8px; }
+        h1 { margin-top: 0; }
+        ul { line-height: 1.8; }
+        a { color: #0b57d0; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .note { background: #fff3cd; padding: 10px; border-left: 4px solid #f0ad4e; margin-top: 15px; }
+        code { background: #f1f1f1; padding: 2px 6px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Phishing Extension Hosted Demo Links</h1>
+        <p>Use the hosted demo server rather than <code>file://</code> testing.</p>
+
+        <div class="note">
+            Add this line to <code>/etc/hosts</code>:<br>
+            <code>127.0.0.1 verify-paypal-login.test bank-security-alert.test microsoft-auth-check.test local-docs localhost-review</code>
+            <br><br>
+            Then start the demo server with:<br>
+            <code>sudo python3 serve_hosted_demos.py --port 80</code>
+        </div>
+
+        <h2>Phishing (expected: phishing)</h2>
+        <ul>
+            <li><a href="http://verify-paypal-login.test/">1) Checkout form (bank details + CVV)</a></li>
+            <li><a href="http://bank-security-alert.test/">2) Login page</a></li>
+            <li><a href="http://microsoft-auth-check.test/">3) Legitimate-looking page with paypa1-verification</a></li>
+        </ul>
+
+        <h2>Suspicious (expected: suspicious)</h2>
+        <ul>
+            <li><a href="http://local-docs/">local-docs</a></li>
+            <li><a href="http://localhost-review/">localhost-review</a></li>
+        </ul>
+    </div>
+</body>
+</html>

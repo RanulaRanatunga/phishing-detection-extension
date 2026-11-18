@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shared File Access</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #eef2f7; padding: 24px; margin: 0; }
+        .box { max-width: 620px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 8px; border: 1px solid #d9dee6; }
+        h1 { margin-top: 0; color: #1f2937; }
+        .url-sample {
+            margin-top: 10px;
+            background: #f8fafc;
+            border: 1px solid #d2d8e1;
+            border-radius: 6px;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 13px;
+            color: #334155;
+            word-break: break-all;
+        }
+        .warn { margin-top: 12px; font-size: 13px; color: #92400e; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 6px; padding: 10px; }
+        button { margin-top: 14px; padding: 10px 14px; border: none; background: #3367d6; color: #fff; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>Team shared file check</h1>
+        <p>Your team uploaded a file that needs quick verification before download.</p>
+
+        <p><strong>IP-Based Domain Example</strong></p>
+        <div class="url-sample">http://185.199.110.153/shared/file-review?token=ac49f21</div>
+
+        <div class="warn">This link uses a direct IP address instead of a normal domain name.</div>
+
+        <button onclick="alert('Opening shared file review...')">Review file</button>
+    </div>
+</body>
+</html>

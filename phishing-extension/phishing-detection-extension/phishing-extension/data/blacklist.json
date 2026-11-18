@@ -1,0 +1,10 @@
+{
+  "description": "Blacklist of known phishing URLs from training dataset",
+  "version": "1.0",
+  "last_updated": "2026-01-22",
+  "source": "feature_sample.csv",
+  "total_urls": 1,
+  "urls": [
+    "http://microsoft-auth-check.test/"
+  ]
+}

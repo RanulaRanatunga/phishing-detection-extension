@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phishing Detector</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --brand: #314dd4;
+            --brand-soft: #e4eafe;
+            --shell-top: #dfe6ff;
+            --shell-bottom: #edf2ff;
+            --surface: #ffffff;
+            --surface-soft: #f6f8ff;
+            --stroke: #dde3f2;
+            --text-strong: #20263a;
+            --text-muted: #69728d;
+            --state: #4d82ff;
+            --state-soft: #e7efff;
+            --state-ink: #2b5ed1;
+            --alert-soft: #fff0f2;
+            --alert-stroke: #f2c6cd;
+            --alert-text: #a43b4d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 400px;
+            overflow: hidden;
+            font-family: "Avenir Next", "Trebuchet MS", "Segoe UI", sans-serif;
+            color: var(--text-strong);
+            background: var(--shell-top);
+        }
+
+        body[data-state="loading"] {
+            --state: #4d82ff;
+            --state-soft: #e7efff;
+            --state-ink: #2b5ed1;
+        }
+
+        body[data-state="legitimate"] {
+            --state: #3ba14b;
+            --state-soft: #e8f7ea;
+            --state-ink: #287a35;
+        }
+
+        body[data-state="suspicious"] {
+            --state: #d39a23;
+            --state-soft: #fff4de;
+            --state-ink: #9b6712;
+        }
+
+        body[data-state="phishing"] {
+            --state: #d95364;
+            --state-soft: #ffe8ec;
+            --state-ink: #a63446;
+        }
+
+        body[data-state="error"] {
+            --state: #7c879f;
+            --state-soft: #edf0f6;
+            --state-ink: #5f6980;
+        }
+
+        .app-shell {
+            background: linear-gradient(180deg, var(--shell-top) 0%, var(--shell-bottom) 96px, var(--surface) 96px, var(--surface) 100%);
+        }
+
+        .chrome {
+            display: flex;
+            justify-content: center;
+            padding: 14px 16px 10px;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--brand);
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+
+        .brand-mark {
+            width: 24px;
+            height: 24px;
+            border-radius: 999px;
+            display: grid;
+            place-items: center;
+            background: rgba(255, 255, 255, 0.86);
+            box-shadow: 0 8px 20px rgba(65, 91, 173, 0.12);
+            font-size: 11px;
+            font-weight: 900;
+        }
+
+        .surface {
+            padding: 10px 14px 14px;
+            border-radius: 24px 24px 0 0;
+            background: var(--surface);
+        }
+
+        .panel {
+            display: grid;
+            justify-items: center;
+            gap: 10px;
+            text-align: center;
+        }
+
+        .hero-badge {
+            position: relative;
+            width: 88px;
+            height: 88px;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, #ffffff 0%, #f4f7ff 58%, #edf2ff 100%);
+            box-shadow: 0 14px 28px rgba(85, 103, 160, 0.14);
+        }
+
+        .hero-badge::before {
+            content: "";
+            position: absolute;
+            inset: 11px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .hero-shield {
+            position: absolute;
+            inset: 22px;
+            display: grid;
+            place-items: center;
+            clip-path: polygon(50% 2%, 84% 16%, 84% 58%, 50% 94%, 16% 58%, 16% 16%);
+            background: linear-gradient(180deg, var(--state-soft) 0%, #ffffff 100%);
+            border: 2px solid rgba(0, 0, 0, 0.02);
+            box-shadow: inset 0 -10px 16px rgba(255, 255, 255, 0.75);
+        }
+
+        .hero-symbol {
+            color: var(--state-ink);
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: -0.04em;
+        }
+
+        .state-chip {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 104px;
+            padding: 7px 14px;
+            border-radius: 12px;
+            background: var(--brand-soft);
+            color: var(--brand);
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .status-text {
+            font-size: 20px;
+            line-height: 1;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            color: var(--state-ink);
+        }
+
+        .summary-text {
+            max-width: 296px;
+            color: var(--text-muted);
+            font-size: 12px;
+            line-height: 1.45;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+        }
+
+        .metric-row {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .metric-pill {
+            padding: 10px 12px;
+            border-radius: 14px;
+            background: var(--surface-soft);
+        }
+
+        .metric-label {
+            display: block;
+            color: var(--text-muted);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .metric-value {
+            display: block;
+            margin-top: 6px;
+            color: var(--text-strong);
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .site-line {
+            color: var(--text-muted);
+            font-size: 12px;
+            line-height: 1.35;
+        }
+
+        .site-line strong {
+            color: var(--text-strong);
+            font-weight: 800;
+        }
+
+        .url-strip {
+            width: 100%;
+            padding: 9px 12px;
+            border-radius: 14px;
+            border: 1px solid var(--stroke);
+            background: var(--surface-soft);
+            color: #5d6781;
+            font-family: "SFMono-Regular", "Consolas", "Liberation Mono", monospace;
+            font-size: 10.5px;
+            line-height: 1.5;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .detail-grid {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .detail-card {
+            padding: 12px;
+            text-align: left;
+            border-radius: 18px;
+            border: 1px solid var(--stroke);
+            background: #ffffff;
+            box-shadow: 0 8px 18px rgba(82, 96, 145, 0.06);
+        }
+
+        .detail-card.full {
+            grid-column: 1 / -1;
+        }
+
+        .detail-icon {
+            width: 30px;
+            height: 30px;
+            display: grid;
+            place-items: center;
+            margin-bottom: 8px;
+            border-radius: 999px;
+            background: var(--state-soft);
+            color: var(--state-ink);
+            font-size: 13px;
+            font-weight: 900;
+        }
+
+        .detail-title {
+            color: var(--text-strong);
+            font-size: 12px;
+            font-weight: 800;
+            line-height: 1.25;
+        }
+
+        .detail-body {
+            margin-top: 5px;
+            color: var(--text-muted);
+            font-size: 11px;
+            line-height: 1.45;
+        }
+
+        #reasonText {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .badge-danger {
+            background: #ffe7ec;
+            color: #b63f51;
+        }
+
+        .badge-neutral {
+            background: #edf1fb;
+            color: #5d6781;
+        }
+
+        .loading-card .hero-symbol {
+            animation: pulse 1.1s ease-in-out infinite;
+        }
+
+        .error {
+            width: 100%;
+            padding: 11px 13px;
+            border-radius: 16px;
+            border: 1px solid var(--alert-stroke);
+            background: var(--alert-soft);
+            color: var(--alert-text);
+            font-size: 11px;
+            line-height: 1.4;
+            text-align: left;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                transform: scale(0.96);
+                opacity: 0.8;
+            }
+
+            50% {
+                transform: scale(1.04);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body data-state="loading">
+    <div class="app-shell">
+        <div class="chrome">
+            <div class="brand">
+                <span class="brand-mark">PD</span>
+                <span>Phishing Detector</span>
+            </div>
+        </div>
+
+        <div class="surface">
+            <div id="loading" class="panel loading-card">
+                <div class="hero-badge">
+                    <div class="hero-shield">
+                        <span class="hero-symbol">...</span>
+                    </div>
+                </div>
+                <div class="state-chip">Protection</div>
+                <div class="status-text">Scanning Page</div>
+                <p class="summary-text">Checking the current tab against the local model and blacklist signals.</p>
+            </div>
+
+            <div id="result" class="panel" style="display: none;">
+                <div class="hero-badge">
+                    <div class="hero-shield">
+                        <span class="hero-symbol" id="statusIcon"></span>
+                    </div>
+                </div>
+
+                <div class="state-chip" id="statusTag">Protection</div>
+                <div class="status-text" id="statusText"></div>
+                <p class="summary-text" id="statusSummary"></p>
+
+                <div class="metric-row">
+                    <div class="metric-pill">
+                        <span class="metric-label">Confidence</span>
+                        <span class="metric-value" id="confidence"></span>
+                    </div>
+                    <div class="metric-pill">
+                        <span class="metric-label">Signals</span>
+                        <span class="metric-value" id="signalCount"></span>
+                    </div>
+                </div>
+
+                <p class="site-line">Protection for <strong id="hostnameDisplay">Waiting...</strong></p>
+                <div class="url-strip" id="urlDisplay"></div>
+
+                <div class="detail-grid">
+                    <div class="detail-card full" id="sourceCard">
+                        <div class="detail-icon">ML</div>
+                        <div class="detail-title">Detection Source</div>
+                        <div class="detail-body" id="sourceText"></div>
+                    </div>
+
+                    <div class="detail-card" id="blacklistRow" style="display: none;">
+                        <div class="detail-icon">BL</div>
+                        <div class="detail-title">Blacklist</div>
+                        <div class="detail-body" id="blacklistMatch"></div>
+                    </div>
+
+                    <div class="detail-card full" id="reasonRow" style="display: none;">
+                        <div class="detail-icon">SI</div>
+                        <div class="detail-title">Top Signal</div>
+                        <div class="detail-body" id="reasonText"></div>
+                    </div>
+                </div>
+
+                <div id="error" class="error" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>

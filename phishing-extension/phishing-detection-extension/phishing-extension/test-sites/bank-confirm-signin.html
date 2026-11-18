@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Login Portal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(160deg, #0f172a, #1e293b);
+            display: grid;
+            place-items: center;
+        }
+        .login-card {
+            width: 360px;
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 24px;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+        }
+        .logo {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 4px;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 14px;
+        }
+        .field { margin-top: 10px; }
+        .field label { display: block; font-size: 13px; margin-bottom: 4px; color: #374151; }
+        .field input {
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #cdd5df;
+            border-radius: 6px;
+            padding: 10px;
+            font-size: 14px;
+        }
+        .row {
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: #4b5563;
+        }
+        .btn {
+            width: 100%;
+            margin-top: 14px;
+            border: none;
+            border-radius: 6px;
+            padding: 11px;
+            font-weight: 700;
+            background: #2563eb;
+            color: #fff;
+            cursor: pointer;
+        }
+        .foot {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 12px;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <div class="logo">NorthBank Online</div>
+        <div class="subtitle">Sign in to continue</div>
+        <div class="field">
+            <label>Username</label>
+            <input type="text" placeholder="Enter username">
+        </div>
+        <div class="field">
+            <label>Password</label>
+            <input type="password" placeholder="Enter password">
+        </div>
+        <div class="field">
+            <label>Security code</label>
+            <input type="text" placeholder="One-time code">
+        </div>
+
+        <div class="row">
+            <label><input type="checkbox"> Keep me signed in</label>
+            <span>Forgot password?</span>
+        </div>
+
+        <button class="btn" onclick="alert('Sign-in request received.')">Sign in</button>
+        <div class="foot">Secure access gateway</div>
+    </div>
+</body>
+</html>
